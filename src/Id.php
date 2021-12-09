@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 namespace Wikimedia\ES;
 
-interface Event {
-    public function aggregateId(): Id;
+interface Id {
+    public function __toString(): string;
 }

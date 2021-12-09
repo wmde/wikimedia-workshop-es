@@ -11,7 +11,7 @@ class EntityMade implements \Wikimedia\ES\Event {
         $this->id = $id;
     }
 
-    public function id(): EntityId {
+    public function aggregateId(): EntityId {
         return $this->id;
     }
 

@@ -19,7 +19,7 @@ class Statement {
         $statement = new self();
         $statement->record(
             new StatementMade(
-                new StatementId(),
+                new StatementId( uniqId('', true) ),
                 $snak
             )
         );
@@ -57,7 +57,7 @@ class Statement {
         );
     }
 
-    public function id(): ?StatementId {
+    public function aggregateId(): ?StatementId {
         return $this->id;
     }
 
@@ -94,7 +94,7 @@ class Statement {
     }
 
     private function applyStatementMade(StatementMade $event) {
-        $this->id = $event->id();
+        $this->id = $event->aggregateId();
         $this->snak = $event->snak();
     }
 

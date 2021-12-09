@@ -1,6 +1,16 @@
 <?php declare(strict_types=1);
 namespace Wikimedia\ES;
 
-class EntityId {
+class EntityId implements Id{
+
+    private $string;
+
+    public function __construct( string $string ) {
+        $this->string = $string;
+    }
+
+	function __toString(): string {
+        return "entity:{$this->string}";
+	}
 
 }

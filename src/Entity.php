@@ -14,7 +14,7 @@ class Entity {
         $entity = new self();
         $entity->record(
             new EntityMade(
-                new EntityId()
+                new EntityId( "X" . autoInc() )
             )
         );
 
@@ -30,7 +30,7 @@ class Entity {
         return $entity;
     }
 
-    public function id(): ?EntityId {
+    public function aggregateId(): ?EntityId {
         return $this->id;
     }
 
@@ -55,6 +55,6 @@ class Entity {
     }
 
     private function applyEntityMade(EntityMade $event) {
-        $this->id = $event->id();
+        $this->id = $event->aggregateId();
     }
 }

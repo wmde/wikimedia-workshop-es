@@ -14,7 +14,7 @@ class StatementRankUpdated implements \Wikimedia\ES\Event {
         $this->rank = $rank;
     }
 
-    public function id(): StatementId {
+    public function aggregateId(): StatementId {
         return $this->id;
     }
 

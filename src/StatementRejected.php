@@ -9,7 +9,7 @@ class StatementRejected {
         $this->id = $id;
     }
 
-    public function id(): StatementId {
+    public function aggregateId(): StatementId {
         return $this->id;
     }
 
