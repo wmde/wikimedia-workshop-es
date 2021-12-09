@@ -7,6 +7,9 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'wikimedia\\es\\entity' => '/Entity.php',
+                'wikimedia\\es\\entityid' => '/EntityId.php',
+                'wikimedia\\es\\entitymade' => '/EntityMade.php',
                 'wikimedia\\es\\event' => '/Event.php',
                 'wikimedia\\es\\snak' => '/Snak.php',
                 'wikimedia\\es\\statement' => '/Statement.php',
