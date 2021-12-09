@@ -8,15 +8,19 @@ require __DIR__ . '/src/autoload.php';
 $snak = new Snak();
 
 $statement = Statement::make($snak);
-var_dump($statement->isAccepted());
+echo "Statement made, with normal rank\n";
+var_dump($statement->rank());
 
-$statement->accept();
-var_dump($statement->isAccepted());
+$statement->updateRank(Statement::RANK_PREFERRED);
+echo "Statement rank set to preffered\n";
+var_dump($statement->rank());
 
 $events = $statement->flushRecordedEvents();
 
+echo "All events for statement\n";
 var_dump($events);
 
 $second = Statement::fromEvents(...$events);
 
-var_dump($second->isAccepted());
+echo "Rank rebuilt from all events\n";
+var_dump($second->rank());

@@ -7,9 +7,13 @@ class Statement {
 
     private ?StatementId $id;
     private ?Snak $snak;
-    private bool $accepted = false;
+    private string $rank = self::RANK_NORMAL;
 
     private array $recordedEvents = [];
+
+    const RANK_PREFERRED = 'preferred';
+    const RANK_NORMAL = 'normal';
+    const RANK_DEPRECATED = 'deprecated';
 
     public static function make(Snak $snak): self {
         $statement = new self();
@@ -32,7 +36,7 @@ class Statement {
         return $statement;
     }
 
-    public function accept(): void {
+    public function updateRank( string $rank ): void {
         if ($this->id === null) {
             throw new RuntimeException('Not properly instantiated??');
         }
@@ -41,13 +45,14 @@ class Statement {
             throw new RuntimeException('Cannot accept empty snak statement');
         }
 
-        if ($this->accepted === true) {
-            throw new RuntimeException('Already accepted');
+        if ($this->rank === $rank) {
+            throw new RuntimeException('Already at rank ' . $rank);
         }
 
         $this->record(
-            new StatementAccepted(
-                $this->id
+            new StatementRankUpdated(
+                $this->id,
+                $rank
             )
         );
     }
@@ -60,8 +65,8 @@ class Statement {
         return $this->snak;
     }
 
-    public function isAccepted(): bool {
-        return $this->accepted;
+    public function rank(): string {
+        return $this->rank;
     }
 
     public function flushRecordedEvents(): array {
@@ -82,8 +87,8 @@ class Statement {
                 $this->applyStatementMade($event);
                 break;
 
-            case $event instanceof StatementAccepted:
-                $this->applyStatementAccepted($event);
+            case $event instanceof StatementRankUpdated:
+                $this->applyStatementRankUpdated($event);
                 break;
         }
     }
@@ -93,7 +98,7 @@ class Statement {
         $this->snak = $event->snak();
     }
 
-    private function applyStatementAccepted(StatementAccepted $event) {
-        $this->accepted = true;
+    private function applyStatementRankUpdated(StatementRankUpdated $event) {
+        $this->rank = $event->rank();
     }
 }

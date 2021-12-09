@@ -7,15 +7,15 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'wikimedia\\es\\event' => '/Event.php',
+                'wikimedia\\es\\snak' => '/Snak.php',
                 'wikimedia\\es\\statement' => '/Statement.php',
-                'wikimedia\\es\\statementaccepted' => '/StatementAccepted.php',
-                'wikimedia\\es\\statementacceptedeventhandler' => '/StatementAcceptedEventHandler.php',
                 'wikimedia\\es\\statementid' => '/StatementId.php',
                 'wikimedia\\es\\statementmade' => '/StatementMade.php',
                 'wikimedia\\es\\statementpublished' => '/StatementPublished.php',
-                'wikimedia\\es\\statementrejected' => '/StatementRejected.php',
-                'wikimedia\\es\\event' => '/Event.php',
-                'wikimedia\\es\\snak' => '/Snak.php'
+                'wikimedia\\es\\statementrankupdated' => '/StatementRankUpdated.php',
+                'wikimedia\\es\\statementrankupdatedeventhandler' => '/StatementRankUpdatedEventHandler.php',
+                'wikimedia\\es\\statementrejected' => '/StatementRejected.php'
             );
         }
         $cn = strtolower($class);
