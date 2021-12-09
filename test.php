@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-use Wikimedia\ES\Comment;
-use Wikimedia\ES\Message;
+use Wikimedia\ES\Statement;
+use Wikimedia\ES\Snak;
 
 require __DIR__ . '/src/autoload.php';
 
-$message = new Message();
+$snak = new Snak();
 
-$comment = Comment::make($message);
-var_dump($comment->isAccepted());
+$statement = Statement::make($snak);
+var_dump($statement->isAccepted());
 
-$comment->accept();
-var_dump($comment->isAccepted());
+$statement->accept();
+var_dump($statement->isAccepted());
 
-$events = $comment->flushRecordedEvents();
+$events = $statement->flushRecordedEvents();
 
 var_dump($events);
 
-$second = Comment::fromEvents(...$events);
+$second = Statement::fromEvents(...$events);
 
 var_dump($second->isAccepted());

@@ -3,33 +3,33 @@ namespace Wikimedia\ES;
 
 use RuntimeException;
 
-class Comment {
+class Statement {
 
-    private ?CommentId $id;
-    private ?Message $message;
+    private ?StatementId $id;
+    private ?Snak $snak;
     private bool $accepted = false;
 
     private array $recordedEvents = [];
 
-    public static function make(Message $message): self {
-        $comment = new self();
-        $comment->record(
-            new CommentMade(
-                new CommentId(),
-                $message
+    public static function make(Snak $snak): self {
+        $statement = new self();
+        $statement->record(
+            new StatementMade(
+                new StatementId(),
+                $snak
             )
         );
 
-        return $comment;
+        return $statement;
     }
 
     public static function fromEvents(Event ...$events): self {
-        $comment = new self();
+        $statement = new self();
         foreach($events as $event) {
-            $comment->applyEvent($event);
+            $statement->applyEvent($event);
         }
 
-        return $comment;
+        return $statement;
     }
 
     public function accept(): void {
@@ -37,8 +37,8 @@ class Comment {
             throw new RuntimeException('Not properly instantiated??');
         }
 
-        if ($this->message === null) {
-            throw new RuntimeException('Cannot accept empty message comment');
+        if ($this->snak === null) {
+            throw new RuntimeException('Cannot accept empty snak statement');
         }
 
         if ($this->accepted === true) {
@@ -46,18 +46,18 @@ class Comment {
         }
 
         $this->record(
-            new CommentAccepted(
+            new StatementAccepted(
                 $this->id
             )
         );
     }
 
-    public function id(): ?CommentId {
+    public function id(): ?StatementId {
         return $this->id;
     }
 
-    public function message(): ?Message {
-        return $this->message;
+    public function snak(): ?Snak {
+        return $this->snak;
     }
 
     public function isAccepted(): bool {
@@ -78,22 +78,22 @@ class Comment {
 
     private function applyEvent(Event $event): void {
         switch (true) {
-            case $event instanceof CommentMade:
-                $this->applyCommentMade($event);
+            case $event instanceof StatementMade:
+                $this->applyStatementMade($event);
                 break;
 
-            case $event instanceof CommentAccepted:
-                $this->applyCommentAccepted($event);
+            case $event instanceof StatementAccepted:
+                $this->applyStatementAccepted($event);
                 break;
         }
     }
 
-    private function applyCommentMade(CommentMade $event) {
+    private function applyStatementMade(StatementMade $event) {
         $this->id = $event->id();
-        $this->message = $event->message();
+        $this->snak = $event->snak();
     }
 
-    private function applyCommentAccepted(CommentAccepted $event) {
+    private function applyStatementAccepted(StatementAccepted $event) {
         $this->accepted = true;
     }
 }
