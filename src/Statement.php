@@ -57,7 +57,7 @@ class Statement {
         );
     }
 
-    public function aggregateId(): ?StatementId {
+    public function id(): ?StatementId {
         return $this->id;
     }
 

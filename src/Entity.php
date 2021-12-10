@@ -30,7 +30,7 @@ class Entity {
         return $entity;
     }
 
-    public function aggregateId(): ?EntityId {
+    public function id(): ?EntityId {
         return $this->id;
     }
 

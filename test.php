@@ -11,19 +11,19 @@ require __DIR__ . '/src/magicalfunctions.php';
 // Make Entity
 $entity = Entity::make();
 echo "Entity made\n";
-var_dump($entity->aggregateId());
+var_dump($entity->id());
 
 // Make Statement1
 $snak1 = new Snak();
 $statement1 = Statement::make($snak1);
 echo "Statement made, with normal rank\n";
-var_dump($statement1->aggregateId());
+var_dump($statement1->id());
 
 // Make Statement2
 $snak2 = new Snak();
 $statement2 = Statement::make($snak2);
 echo "Statement made, with normal rank\n";
-var_dump($statement2->aggregateId());
+var_dump($statement2->id());
 var_dump($statement2->rank());
 
 $statement2->updateRank(Statement::RANK_PREFERRED);
@@ -48,12 +48,12 @@ function filterEvents( $events, Id $id ) {
 }
 
 echo "Rebuilt from all events\n";
-$reEntity = Entity::fromEvents( ...filterEvents( $eventStore, $entity->aggregateId() ) );
-$reStatement1 = Statement::fromEvents( ...filterEvents( $eventStore, $statement1->aggregateId() ) );
-$reStatement2 = Statement::fromEvents( ...filterEvents( $eventStore, $statement2->aggregateId() ) );
+$reEntity = Entity::fromEvents( ...filterEvents( $eventStore, $entity->id() ) );
+$reStatement1 = Statement::fromEvents( ...filterEvents( $eventStore, $statement1->id() ) );
+$reStatement2 = Statement::fromEvents( ...filterEvents( $eventStore, $statement2->id() ) );
 
-var_dump($reEntity->aggregateId());
-var_dump($reStatement1->aggregateId());
+var_dump($reEntity->id());
+var_dump($reStatement1->id());
 var_dump($reStatement1->rank());
-var_dump($reStatement2->aggregateId());
+var_dump($reStatement2->id());
 var_dump($reStatement2->rank());
