@@ -5,14 +5,14 @@ use RuntimeException;
 
 class Entity {
 
+    private ?EventLog $eventLog;
+
     private ?EntityId $id;
 
     private array $statementIds = [];
 
-    private array $recordedEvents = [];
-
-    public static function make(): self {
-        $entity = new self();
+    public static function make(EventLog $eventLog): self {
+        $entity = new self($eventLog);
         $entity->record(
             new EntityMade(
                 new EntityId( "X" . autoInc() )
@@ -22,14 +22,18 @@ class Entity {
         return $entity;
     }
 
+    public function __construct( EventLog $eventLog ) {
+        $this->eventLog = $eventLog;
+    }
+
     public function addStatement(StatementId $statementId) {
         $this->record(
             new StatementAdded( $this->id, $statementId )
         );
     }
 
-    public static function fromEvents(Event ...$events): self {
-        $entity = new self();
+    public static function fromEvents(EventLog $eventLog, Event ...$events): self {
+        $entity = new self($eventLog);
         foreach($events as $event) {
             $entity->applyEvent($event);
         }
@@ -45,15 +49,8 @@ class Entity {
         return $this->statementIds;
     }
 
-    public function flushRecordedEvents(): array {
-        $events = $this->recordedEvents;
-        $this->recordedEvents = [];
-
-        return $events;
-    }
-
     private function record(Event $event): void {
-        $this->recordedEvents[] = $event;
+        $this->eventLog->add($event);
         $this->applyEvent($event);
     }
 

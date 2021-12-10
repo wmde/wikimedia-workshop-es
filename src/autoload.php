@@ -11,6 +11,8 @@ spl_autoload_register(
                 'wikimedia\\es\\entityid' => '/EntityId.php',
                 'wikimedia\\es\\entitymade' => '/EntityMade.php',
                 'wikimedia\\es\\event' => '/Event.php',
+                'wikimedia\\es\\eventlog' => '/EventLog.php',
+                'wikimedia\\es\\eventstore' => '/EventStore.php',
                 'wikimedia\\es\\id' => '/Id.php',
                 'wikimedia\\es\\snak' => '/Snak.php',
                 'wikimedia\\es\\statement' => '/Statement.php',
