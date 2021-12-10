@@ -14,6 +14,7 @@ spl_autoload_register(
                 'wikimedia\\es\\id' => '/Id.php',
                 'wikimedia\\es\\snak' => '/Snak.php',
                 'wikimedia\\es\\statement' => '/Statement.php',
+                'wikimedia\\es\\statementadded' => '/StatementAdded.php',
                 'wikimedia\\es\\statementid' => '/StatementId.php',
                 'wikimedia\\es\\statementmade' => '/StatementMade.php',
                 'wikimedia\\es\\statementpublished' => '/StatementPublished.php',

@@ -30,6 +30,11 @@ $statement2->updateRank(Statement::RANK_PREFERRED);
 echo "Statement rank set to preffered\n";
 var_dump($statement2->rank());
 
+// Add Statement1 to Entity
+$entity->addStatement($statement1->id());
+echo "Added Statement1 to Entity\n";
+var_dump($entity->statements());
+
 // Dump events into topics?
 $eventStore = array_merge(
     $entity->flushRecordedEvents(),
@@ -53,6 +58,7 @@ $reStatement1 = Statement::fromEvents( ...filterEvents( $eventStore, $statement1
 $reStatement2 = Statement::fromEvents( ...filterEvents( $eventStore, $statement2->id() ) );
 
 var_dump($reEntity->id());
+var_dump($reEntity->statements());
 var_dump($reStatement1->id());
 var_dump($reStatement1->rank());
 var_dump($reStatement2->id());

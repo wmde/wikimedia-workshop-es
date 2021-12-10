@@ -6,7 +6,8 @@ use RuntimeException;
 class Entity {
 
     private ?EntityId $id;
-    private ?array $statementIds;
+
+    private array $statementIds = [];
 
     private array $recordedEvents = [];
 
@@ -21,6 +22,12 @@ class Entity {
         return $entity;
     }
 
+    public function addStatement(StatementId $statementId) {
+        $this->record(
+            new StatementAdded( $this->id, $statementId )
+        );
+    }
+
     public static function fromEvents(Event ...$events): self {
         $entity = new self();
         foreach($events as $event) {
@@ -32,6 +39,10 @@ class Entity {
 
     public function id(): ?EntityId {
         return $this->id;
+    }
+
+    public function statements(): array {
+        return $this->statementIds;
     }
 
     public function flushRecordedEvents(): array {
@@ -51,10 +62,18 @@ class Entity {
             case $event instanceof EntityMade:
                 $this->applyEntityMade($event);
                 break;
+
+            case $event instanceof StatementAdded:
+                $this->applyStatementAdded($event);
+                break;
         }
     }
 
     private function applyEntityMade(EntityMade $event) {
         $this->id = $event->aggregateId();
+    }
+
+    private function applyStatementAdded(StatementAdded $event) {
+        $this->statementIds[] = $event->statementId();
     }
 }
