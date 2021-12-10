@@ -3,25 +3,28 @@
 use Wikimedia\ES\Statement;
 use Wikimedia\ES\Snak;
 use Wikimedia\ES\Entity;
+use Wikimedia\ES\EventStore;
 use Wikimedia\ES\Id;
 
 require __DIR__ . '/src/autoload.php';
 require __DIR__ . '/src/magicalfunctions.php';
 
+$eventLog = new EventStore();
+
 // Make Entity
-$entity = Entity::make();
+$entity = Entity::make($eventLog);
 echo "Entity made\n";
 var_dump($entity->id());
 
 // Make Statement1
 $snak1 = new Snak();
-$statement1 = Statement::make($snak1);
+$statement1 = Statement::make($eventLog, $snak1);
 echo "Statement made, with normal rank\n";
 var_dump($statement1->id());
 
 // Make Statement2
 $snak2 = new Snak();
-$statement2 = Statement::make($snak2);
+$statement2 = Statement::make($eventLog, $snak2);
 echo "Statement made, with normal rank\n";
 var_dump($statement2->id());
 var_dump($statement2->rank());
@@ -35,27 +38,21 @@ $entity->addStatement($statement1->id());
 echo "Added Statement1 to Entity\n";
 var_dump($entity->statements());
 
-// Dump events into topics?
-$eventStore = array_merge(
-    $entity->flushRecordedEvents(),
-    $statement1->flushRecordedEvents(),
-    $statement2->flushRecordedEvents()
-);
 echo "All events\n";
-var_dump($eventStore);
+var_dump($eventLog->getEvents());
 
 // Recreate from events
 
-function filterEvents( $events, Id $id ) {
-    return array_filter( $events, function ( $event ) use ( $id ) {
+function filterEvents( $eventLog, Id $id ) {
+    return array_filter( $eventLog->getEvents(), function ( $event ) use ( $id ) {
         return $id->__toString() === $event->aggregateId()->__toString();
     } );
 }
 
 echo "Rebuilt from all events\n";
-$reEntity = Entity::fromEvents( ...filterEvents( $eventStore, $entity->id() ) );
-$reStatement1 = Statement::fromEvents( ...filterEvents( $eventStore, $statement1->id() ) );
-$reStatement2 = Statement::fromEvents( ...filterEvents( $eventStore, $statement2->id() ) );
+$reEntity = Entity::fromEvents( $eventLog, ...filterEvents( $eventLog, $entity->id() ) );
+$reStatement1 = Statement::fromEvents( $eventLog, ...filterEvents( $eventLog, $statement1->id() ) );
+$reStatement2 = Statement::fromEvents( $eventLog, ...filterEvents( $eventLog, $statement2->id() ) );
 
 var_dump($reEntity->id());
 var_dump($reEntity->statements());

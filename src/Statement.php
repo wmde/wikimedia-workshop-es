@@ -5,18 +5,17 @@ use RuntimeException;
 
 class Statement {
 
+    private ?EventLog $eventLog;
     private ?StatementId $id;
     private ?Snak $snak;
     private string $rank = self::RANK_NORMAL;
-
-    private array $recordedEvents = [];
 
     const RANK_PREFERRED = 'preferred';
     const RANK_NORMAL = 'normal';
     const RANK_DEPRECATED = 'deprecated';
 
-    public static function make(Snak $snak): self {
-        $statement = new self();
+    public static function make(EventLog $eventLog, Snak $snak): self {
+        $statement = new self($eventLog);
         $statement->record(
             new StatementMade(
                 new StatementId( uniqId('', true) ),
@@ -27,8 +26,12 @@ class Statement {
         return $statement;
     }
 
-    public static function fromEvents(Event ...$events): self {
-        $statement = new self();
+    public function __construct( EventLog $eventLog ) {
+        $this->eventLog = $eventLog;
+    }
+
+    public static function fromEvents(EventLog $eventLog, Event ...$events): self {
+        $statement = new self($eventLog);
         foreach($events as $event) {
             $statement->applyEvent($event);
         }
@@ -69,15 +72,8 @@ class Statement {
         return $this->rank;
     }
 
-    public function flushRecordedEvents(): array {
-        $events = $this->recordedEvents;
-        $this->recordedEvents = [];
-
-        return $events;
-    }
-
     private function record(Event $event): void {
-        $this->recordedEvents[] = $event;
+        $this->eventLog->add($event);
         $this->applyEvent($event);
     }
 
